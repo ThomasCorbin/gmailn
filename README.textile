@@ -2,4 +2,31 @@ h1. MailN - a gmail monitoring tool
 
 This is a small tool to monitor folders on gmail.
 
-On Ubuntu there are a fair number of
+On Ubuntu there are a fair number of gmail monitoring/notification indicator
+tools.  The problem is that nearly all of them are focused solely on the
+gmail inbox.  But I have tons of folders and nearly all of my email goes into
+those folders, and very little in inbox.
+
+So I want a gmail monitor which looks at folders other than inbox.
+
+Also, I have about 90 folders, and I won't want to monitor around 10 of them,
+since it's only those 10 or so folders who have the highest priority.
+
+Typically these might be coworkers or family.
+
+The other, lower priority folders typically correspond to mailing lists,
+svn or git commit messages, email about tool or products that I use.
+
+Right now the tool is just a command line tool that just prints out
+the folders with unread emails.
+
+As a first step, I want to have a .gmailnrc file, maybe.
+
+As a second step, I would like to add ubuntu notify.
+
+3rd, I might look at ubuntu indicator applet support.
+
+h3. Cucumber/rspec
+
+I developed this in about 10 minutes, but as I'm reading the rspec and cucumber
+book, I would like to try using those on this tool.  Just as a learning experience.
