@@ -1,0 +1,128 @@
+#!/usr/bin/env ruby
+
+require 'gmail'
+require 'ap'
+require 'mc-settings'
+
+email_icon = "/usr/share/icons/Faenza/apps/48/gmail.png"
+
+module OsDetector
+
+  # universal-darwin9.0 shows up for RUBY_PLATFORM on os X leopard with the bundled ruby.
+  # Installing ruby in different manners may give a different result, so beware.
+  # Examine the ruby platform yourself. If you see other values please comment
+  # in the snippet on dzone and I will add them.
+
+  def is_mac?
+    RUBY_PLATFORM.downcase.include?("darwin")
+  end
+
+  def is_windows?
+     RUBY_PLATFORM.downcase.include?("mswin")
+  end
+
+  def is_linux?
+     RUBY_PLATFORM.downcase.include?("linux")
+  end
+
+  def is_ubuntu?
+      `uname -a` =~ /ubuntu/i
+  end
+end
+
+
+class UbuntuNotification
+  include OsDetector
+
+  def notify( icon, title, message )
+    return unless is_ubuntu?
+    # Thread.new do
+    #   cmd = "notify-send -i #{icon} '#{title}' '#{message}'"
+    #   puts cmd
+    #   system( cmd )
+    # end
+
+    # apparently doesn't work well on windows.   Oh well!
+    if !fork
+      system("notify-send -i #{icon} '#{title}' '#{message}'")
+      exit!
+    end
+  end
+end
+
+notification = UbuntuNotification.new
+# notification.notify email_icon, 'Checking Mail', 'foo'
+
+class GmailMonitor
+  def initialize( mailboxes_to_monitor, email_address_to_monitor, password )
+    @mailboxes = mailboxes_to_monitor
+    @login     = email_address_to_monitor
+    @password  = password
+  end
+
+  def monitor
+    stats = {}
+    Gmail.new( @login, @password ) do |gmail|
+        @mailboxes.each do |mailbox|
+          info = monitor_mailbox gmail, mailbox
+          stats.merge! info if ! info.nil?
+        end
+    end
+
+    # stats
+    format stats
+  end
+
+  def format( stats )
+    output = ""
+    stats.each do |key, value|
+      output << "#{key}:     #{value}\n"
+    end
+
+    output
+  end
+
+  def monitor_mailbox( gmail, name )
+    # puts "Looking up folder >#{name}<"
+    mail_box = gmail.label( name )
+    count    = mail_box.count :unread
+
+    return if count <= 0
+
+    # print_mailbox_count name, count
+    # print_unread_subjects mail_box
+    { name => count }
+  end
+
+  def print_mailbox_count( name, count )
+    puts "#{name}: #{count}" if count > 0
+  end
+
+  def print_unread_subjects( mail_box )
+    mail_box.emails( :unread ).each do |email|
+      puts "    #{email.subject}"
+      email.mark :unread
+    end
+  end
+end
+
+# rc_file = "#{ENV['HOME']}/.gmailnrc"
+# puts "Reading rc file >#{rc_file}<"
+
+# rails ArgumentError( "You must have a ~/.gmailnrc file defining folders, email, and login." ) if ! File.exists? rc_file
+
+# load rc_file
+
+Setting.load( :path  => "#{ENV['HOME']}/.config/gmailn",
+              :files => [ "default.yml" ],
+              :local => true )
+
+# ap Setting.email
+# ap Setting.folders
+
+stats = GmailMonitor.new( Setting.folders, Setting.email, Setting.password ).monitor
+
+puts stats
+
+#notification.notify email_icon, 'New Mail', "#{stats}"
+notification.notify email_icon, 'New Mail', stats
