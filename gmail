@@ -54,6 +54,6 @@ worth_listing =
 	's6 - Karen Schaper',
 ]
 
-GmailMonitor.new( worth_listing, 'thomas.corbin@gmail.com', 'barton4me' ).monitor
+GmailMonitor.new( worth_listing, 'XXX', 'XXXpassword' ).monitor
 
 exit
