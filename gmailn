@@ -2,7 +2,7 @@
 
 require 'gmail'
 require 'ap'
-
+require 'mc-settings'
 
 class GmailMonitor
 	def initialize( mailboxes_to_monitor, email_address_to_monitor, password )
@@ -13,21 +13,31 @@ class GmailMonitor
 
 	def monitor
     Gmail.new(@login, @password) do |gmail|
+      stats = {}
     	@mailboxes.each do |mailbox|
-    	  monitor_mailbox gmail, mailbox
+    	  info = monitor_mailbox gmail, mailbox
+        stats.merge! info if ! info.nil?
     	end
+
+      ap stats
     end
 	end
 
 	def monitor_mailbox( gmail, name )
+    # puts "Looking up folder >#{name}<"
     mail_box 	= gmail.label( name )
     count			= mail_box.count :unread
 
     return if count <= 0
 
-    print_mailbox_count name, count
+    # print_mailbox_count name, count
     # print_unread_subjects mail_box
+    { name => count }
 	end
+
+  def print_mailbox_count( name, count )
+    puts "#{name}: #{count}" if count > 0
+  end
 
 	def print_unread_subjects( mail_box )
   	mail_box.emails( :unread ).each do |email|
@@ -35,25 +45,20 @@ class GmailMonitor
   	  email.mark :unread
   	end
 	end
-
-	def print_mailbox_count( name, count )
-  	puts "#{name}: #{count}" if count > 0
-	end
 end
 
-worth_listing =
-[
-	'inbox',
-	'Family - Betty Corbin',
-	'Family - Densel Corbin',
-	'Family - Mary Corbin',
-	'Friend - Dalene Erickson',
-	's6 - Steve Ingram',
-	's6 - Steve McMaster',
-	's6 - Victor Clark',
-	's6 - Karen Schaper',
-]
+# rc_file = "#{ENV['HOME']}/.gmailnrc"
+# puts "Reading rc file >#{rc_file}<"
 
-GmailMonitor.new( worth_listing, 'XXX', 'XXXpassword' ).monitor
+# rails ArgumentError( "You must have a ~/.gmailnrc file defining folders, email, and login." ) if ! File.exists? rc_file
 
-exit
+# load rc_file
+
+Setting.load( :path  => "#{ENV['HOME']}/.config/gmailn",
+              :files => [ "default.yml" ],
+              :local => true )
+
+# ap Setting.email
+# ap Setting.folders
+
+GmailMonitor.new( Setting.folders, Setting.email, Setting.password ).monitor

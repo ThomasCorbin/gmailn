@@ -20,13 +20,31 @@ svn or git commit messages, email about tool or products that I use.
 Right now the tool is just a command line tool that just prints out
 the folders with unread emails.
 
-As a first step, I want to have a .gmailnrc file, maybe.
+Possible enhancements:
 
-As a second step, I would like to add ubuntu notify.
-
-3rd, I might look at ubuntu indicator applet support.
+# I want to have a .gmailnrc file, maybe.
+# I would like to add ubuntu notify.
+# I might look at ubuntu indicator applet support.
 
 h3. Cucumber/rspec
 
 I developed this in about 10 minutes, but as I'm reading the rspec and cucumber
 book, I would like to try using those on this tool.  Just as a learning experience.
+
+h3. Configuration
+
+Given that I'm working on ubuntu, I'm putting the configuration file in
+_~/.config/gmailn/default.yml_
+
+Here's a sample configuration:
+
+bq.. folders:
+  - 'inbox'
+  - 'Bugs'
+  - 'Mom'
+  - 'Sue'
+
+email:    'joe.blow@gmail.com'
+password: 'aaZ23%1'
+
+p. Fill in your own email and password.
