@@ -5,46 +5,46 @@ require 'ap'
 require 'mc-settings'
 
 class GmailMonitor
-	def initialize( mailboxes_to_monitor, email_address_to_monitor, password )
-		@mailboxes = mailboxes_to_monitor
-		@login		 = email_address_to_monitor
-		@password  = password
-	end
+  def initialize( mailboxes_to_monitor, email_address_to_monitor, password )
+    @mailboxes = mailboxes_to_monitor
+    @login     = email_address_to_monitor
+    @password  = password
+  end
 
-	def monitor
-    Gmail.new(@login, @password) do |gmail|
+  def monitor
+    Gmail.new( @login, @password ) do |gmail|
       stats = {}
-    	@mailboxes.each do |mailbox|
-    	  info = monitor_mailbox gmail, mailbox
-        stats.merge! info if ! info.nil?
-    	end
+        @mailboxes.each do |mailbox|
+          info = monitor_mailbox gmail, mailbox
+          stats.merge! info if ! info.nil?
+        end
 
       ap stats
     end
-	end
+  end
 
-	def monitor_mailbox( gmail, name )
+  def monitor_mailbox( gmail, name )
     # puts "Looking up folder >#{name}<"
-    mail_box 	= gmail.label( name )
-    count			= mail_box.count :unread
+    mail_box = gmail.label( name )
+    count    = mail_box.count :unread
 
     return if count <= 0
 
     # print_mailbox_count name, count
     # print_unread_subjects mail_box
     { name => count }
-	end
+  end
 
   def print_mailbox_count( name, count )
     puts "#{name}: #{count}" if count > 0
   end
 
-	def print_unread_subjects( mail_box )
-  	mail_box.emails( :unread ).each do |email|
-  	  puts "    #{email.subject}"
-  	  email.mark :unread
-  	end
-	end
+  def print_unread_subjects( mail_box )
+    mail_box.emails( :unread ).each do |email|
+      puts "    #{email.subject}"
+      email.mark :unread
+    end
+  end
 end
 
 # rc_file = "#{ENV['HOME']}/.gmailnrc"
