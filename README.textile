@@ -1,4 +1,4 @@
-h1. MailN - a gmail monitoring tool
+h1. GmailN - a gmail monitoring tool
 
 This is a small tool to monitor folders on gmail.
 
