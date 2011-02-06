@@ -1,8 +1,11 @@
 source 'http://rubygems.org'
 
 gem 'mime'
-gem 'ruby-gmail'
 gem 'mc-settings'
+
+# gem 'ruby-gmail'
+# gem 'ruby-gmail', :git => "git://github.com/michaeldv/ruby-gmail.git"
+gem 'gmail'
 
 group :development do
   # makes printouts of objects look great. Organized and colorized
