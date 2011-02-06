@@ -20,7 +20,7 @@ svn or git commit messages, email about tool or products that I use.
 Right now the tool is just a command line tool that just prints out
 the folders with unread emails.
 
-Possible enhancements:
+h3. TODO
 
 # I want to look at the code in autotest notification.  Looks good, so we can have notifications on multiple platforms.  Of course, our needs are much simpler.
 # I would like to add ubuntu notify.
