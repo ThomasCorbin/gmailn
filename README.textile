@@ -48,3 +48,17 @@ email:    'joe.blow@gmail.com'
 password: 'aaZ23%1'
 
 p. Fill in your own email and password.
+
+h3. Problems
+
+There's a bug in the ruby-gmail gem. Actually there's several.
+
+They have been fixed in a fork of the gem, but the fixes haven't made it
+back to the original version, and I'm not sure what I can or should do about
+that.
+
+I can copy the fixed version into my project, and then hope the original
+gem gets fixed.
+
+Not sure if I can take the forked version and sort of make my own personal gem
+for it.
