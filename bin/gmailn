@@ -26,8 +26,16 @@ module OsDetector
   end
 
   def is_ubuntu?
+    return if ! is_linux?
       `uname -a` =~ /ubuntu/i
   end
+end
+
+def check_settings_file_exists dir, file
+  settings_file = "#{dir}/#{file}"
+  return if File.exists? settings_file
+  puts "The settings file #{settings_file} must exist and contain your email address, password, and a list of folders"
+  exit
 end
 
 
@@ -115,8 +123,13 @@ end
 
 # load rc_file
 
-Setting.load( :path  => "#{ENV['HOME']}/.config/gmailn",
-              :files => [ "default.yml" ],
+settings_dir  = "#{ENV['HOME']}/.config/gmailn"
+settings_file = 'default.yml'
+
+check_settings_file_exists settings_dir, settings_file
+
+Setting.load( :path  => settings_dir,
+              :files => [ settings_file ],
               :local => true )
 
 # ap Setting.email
