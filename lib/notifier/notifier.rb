@@ -9,7 +9,19 @@ module Notifier
     end
 
     def platform=( new_platform )
-      @platform_notifier = LinuxNotifier.new
+      case new_platform
+        when :linux
+          @platform_notifier = LinuxNotifier.new
+
+        when :mac
+          @platform_notifier = MacNotifier.new
+
+        when :cygwin
+          @platform_notifier = CygwinNotifier.new
+
+        when :windows
+          @platform_notifier = WindowsNotifier.new
+      end
     end
   end
 
